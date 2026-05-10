@@ -1,0 +1,13 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+data/
+artifacts/
+models_cache/
+*.parquet
+*.npz
+*.pkl
+.ipynb_checkpoints/
