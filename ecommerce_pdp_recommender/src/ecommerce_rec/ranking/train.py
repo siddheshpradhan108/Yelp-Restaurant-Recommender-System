@@ -12,18 +12,18 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 
-from walmart_rec.config import ProjectConfig
-from walmart_rec.data import EVENT_ATC, EVENT_CLICK, EVENT_PURCHASE
-from walmart_rec.data.generate import load_catalog, temporal_split
-from walmart_rec.ranking.features import (
+from ecommerce_rec.config import ProjectConfig
+from ecommerce_rec.data import EVENT_ATC, EVENT_CLICK, EVENT_PURCHASE
+from ecommerce_rec.data.generate import load_catalog, temporal_split
+from ecommerce_rec.ranking.features import (
     FEATURE_NAMES,
     assemble_pair_features,
     build_co_purchase_lookup,
     build_customer_understanding,
 )
-from walmart_rec.retrieval.faiss_index import ann_search, load_faiss_index
-from walmart_rec.retrieval.model import item_numeric_features
-from walmart_rec.retrieval.train import load_two_tower
+from ecommerce_rec.retrieval.faiss_index import ann_search, load_faiss_index
+from ecommerce_rec.retrieval.model import item_numeric_features
+from ecommerce_rec.retrieval.train import load_two_tower
 
 POSITIVE_EVENTS = {EVENT_CLICK, EVENT_ATC, EVENT_PURCHASE}
 

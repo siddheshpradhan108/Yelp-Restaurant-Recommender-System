@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from walmart_rec.config import load_config
-from walmart_rec.data.generate import generate_catalog, temporal_split, build_pairs
-from walmart_rec.ranking.features import FEATURE_NAMES, build_customer_understanding
+from ecommerce_rec.config import load_config
+from ecommerce_rec.data.generate import generate_catalog, temporal_split, build_pairs
+from ecommerce_rec.ranking.features import FEATURE_NAMES, build_customer_understanding
 
 
 def test_generate_catalog_shapes():

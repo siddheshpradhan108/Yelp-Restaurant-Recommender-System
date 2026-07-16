@@ -2,7 +2,7 @@
 
 End-to-end offline ranking pipeline on the [Yelp Open Dataset](https://www.yelp.com/dataset). It implements a **two-stage hybrid recommender**: **implicit alternating least squares (ALS)** for collaborative filtering and candidate generation, followed by a **LightGBM LambdaRank** learning-to-rank model over rich features. **Sentence-transformer review embeddings** and **NMF topic features** supply content-side signals that especially help **cold-start and sparse users**.
 
-> **Related project:** [`walmart_pdp_recommender/`](walmart_pdp_recommender/) — a Walmart.com PDP-style **Two-Tower + LightGBM** stack (synthetic e-commerce data, FAISS ANN serving). See that folder’s README for business + engineering walkthrough.
+> **Related project:** [`ecommerce_pdp_recommender/`](ecommerce_pdp_recommender/) — an e-commerce PDP-style **Two-Tower + LightGBM** stack (synthetic e-commerce data, FAISS ANN serving). See that folder’s README for business + engineering walkthrough.
 
 ---
 

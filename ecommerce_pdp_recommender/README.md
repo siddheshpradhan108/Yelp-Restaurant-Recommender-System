@@ -1,12 +1,12 @@
-# Walmart-Style PDP Recommender
+# E-commerce PDP Recommender
 
 **Two-Tower retrieval → FAISS ANN → LightGBM LambdaRank**
 
 End-to-end, production-shaped simulation of the system behind the resume bullet:
 
-> *"Engineered a two-stage product recommendation system using Two-Tower retrieval and a LightGBM ranker for Walmart.com product pages."*
+> *"Engineered a two-stage product recommendation system using Two-Tower retrieval and a LightGBM ranker for large-scale e-commerce product pages."*
 
-This package trains and serves **personalized product recommendations for Product Detail Pages (PDPs)** — the Same Items / “customers also bought” style carousels on a large e-commerce site. It does **not** use proprietary Walmart logs (those are not public). It uses a **structurally faithful synthetic catalog + engagement funnel** so you can run the full stack locally and speak to every design choice in interviews.
+This package trains and serves **personalized product recommendations for Product Detail Pages (PDPs)** — the Same Items / “customers also bought” style carousels on a large e-commerce site. It does **not** ship proprietary retailer logs. It uses a **structurally faithful synthetic catalog + engagement funnel** that mirrors production PDP personalization stacks, so you can run the full system locally and speak to every design choice in interviews.
 
 ---
 
@@ -23,7 +23,7 @@ This package trains and serves **personalized product recommendations for Produc
 9. [Evaluation](#9-evaluation)
 10. [Interview talking points](#10-interview-talking-points)
 11. [Repository layout](#11-repository-layout)
-12. [Relationship to published Walmart work](#12-relationship-to-published-walmart-work)
+12. [Relationship to published industry work](#12-relationship-to-published-industry-work)
 
 ---
 
@@ -31,9 +31,9 @@ This package trains and serves **personalized product recommendations for Produc
 
 ### What problem are we solving?
 
-When a shopper opens a **product page** (e.g. a blender, a pack of diapers, a TV), Walmart surfaces recommendation modules such as:
+When a shopper opens a **product page** (e.g. a blender, a pack of diapers, a TV), large e-commerce sites surface recommendation modules such as:
 
-| Module (Walmart-style) | Intent |
+| Module (typical PDP) | Intent |
 |------------------------|--------|
 | **Similar items (SIR)** | Substitutes for the anchor SKU |
 | **Bought also bought (BAB)** | Complementary / co-purchased items |
@@ -48,14 +48,14 @@ Goals (in priority order for most PDP rails):
 
 ### Why two stages?
 
-Walmart-scale catalogs are **tens of millions of SKUs**. Scoring every SKU with a heavy model per request is impossible under PDP latency budgets (often **tens of milliseconds** end-to-end for the reco call).
+Retail-scale catalogs are **tens of millions of SKUs**. Scoring every SKU with a heavy model per request is impossible under PDP latency budgets (often **tens of milliseconds** end-to-end for the reco call).
 
 | Stage | Job | Scale | Latency target |
 |-------|-----|-------|----------------|
 | **Retrieval** | Find ~100–500 *plausible* candidates | Whole catalog via ANN | ~1–5 ms |
 | **Ranking** | Order those candidates for *this user + this anchor* | Hundreds of rows | ~5–20 ms |
 
-This matches WalmartLabs’ published **SPIR** pattern: keep a strong recall set, then personalize with a re-ranker using **Customer Understanding** (brand, price, …).
+This matches the published **SPIR**-style pattern used in large retail personalization: keep a strong recall set, then personalize with a re-ranker using **Customer Understanding** (brand, price, …).
 
 ---
 
@@ -96,11 +96,11 @@ flowchart TB
 
 | Package | Responsibility |
 |---------|----------------|
-| `walmart_rec.data` | Schema, synthetic generator, temporal split, engagement weights |
-| `walmart_rec.retrieval` | Two-Tower model, InfoNCE training, FAISS index |
-| `walmart_rec.ranking` | Customer Understanding features, LambdaRank train/eval |
-| `walmart_rec.serving` | Production-shaped `PDPRecommender.recommend()` |
-| `walmart_rec.cli` | One CLI for the full lifecycle |
+| `ecommerce_rec.data` | Schema, synthetic generator, temporal split, engagement weights |
+| `ecommerce_rec.retrieval` | Two-Tower model, InfoNCE training, FAISS index |
+| `ecommerce_rec.ranking` | Customer Understanding features, LambdaRank train/eval |
+| `ecommerce_rec.serving` | Production-shaped `PDPRecommender.recommend()` |
+| `ecommerce_rec.cli` | One CLI for the full lifecycle |
 
 ---
 
@@ -108,7 +108,7 @@ flowchart TB
 
 ### Why synthetic data?
 
-Walmart does **not** publish PDP behavioral logs for training. Production papers (EBR, SPIR, GNN-GMVO) use proprietary data. This project generates a **proxy** with the same *shapes* you’d find in a feature store / event warehouse:
+Retailers do **not** publish full PDP behavioral logs for training. Production papers on EBR, SPIR, and similar-item GNN systems use proprietary data. This project generates a **proxy** with the same *shapes* you’d find in a feature store / event warehouse:
 
 ### Tables
 
@@ -141,7 +141,7 @@ Walmart does **not** publish PDP behavioral logs for training. Production papers
 
 **`co_purchase`** — undirected edges `(item_a, item_b, count)` for item–item features.
 
-### Engagement labels (Walmart EBR-style weights)
+### Engagement labels (EBR-style weights)
 
 ```
 weight = 0.001·impressions + 0.01·clicks + 0.1·ATC + 1.0·orders
@@ -177,7 +177,7 @@ score(û, v̂) = cosine(û, v̂) = û · v̂   (both L2-normalized)
 - Positive: engaged item for that context row
 - Negatives: other items in the mini-batch
 
-This is the standard dual-encoder recipe used in search EBR and recsys retrieval (including Walmart’s publicly described EBR dual-encoder).
+This is the standard dual-encoder recipe used in search EBR and recsys retrieval at large e-commerce platforms.
 
 ### Artifacts
 
@@ -230,8 +230,8 @@ LambdaRank directly targets ranking metrics (NDCG), which is why tree rankers re
 ## 6. Serving path
 
 ```python
-from walmart_rec.config import load_config
-from walmart_rec.serving import PDPRecommender
+from ecommerce_rec.config import load_config
+from ecommerce_rec.serving import PDPRecommender
 
 cfg = load_config("configs/default.yaml")
 reco = PDPRecommender(cfg)
@@ -250,7 +250,7 @@ Post-ranker business rules (configurable):
 Requires **Python 3.9+**.
 
 ```bash
-cd walmart_pdp_recommender
+cd ecommerce_pdp_recommender
 python3 -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
@@ -303,7 +303,7 @@ python scripts/run_pipeline.py [--config CONFIG] <command>
 
 ## 9. Evaluation
 
-Primary offline metric: **NDCG@8** (Walmart Similar Items papers often report @8 because shoppers see ~two rows of four).
+Primary offline metric: **NDCG@8** (similar-item PDP studies often report @8 because shoppers see ~two rows of four).
 
 Reported in `artifacts/eval_metrics.json`:
 
@@ -333,14 +333,14 @@ Expect **two-stage ≥ retrieval** on average when Customer Understanding featur
 | Cold-start item? | Item tower uses brand/category/price — new SKUs get embeddings without collaborative history. |
 | Cold-start user? | History mean masks out; user id emb + anchor still retrieve; ranker falls back to item–item features. |
 | Leakage? | Strict temporal split; history only uses events **before** the query timestamp. |
-| How would this change with real Walmart data? | Same pipelines; swap generator for warehouse extracts; add omnichannel events, margin/inventory features, online A/B on ATC/GMV. |
+| How would this change with real production data? | Same pipelines; swap generator for warehouse extracts; add omnichannel events, margin/inventory features, online A/B on ATC/GMV. |
 
 ---
 
 ## 11. Repository layout
 
 ```
-walmart_pdp_recommender/
+ecommerce_pdp_recommender/
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
@@ -349,7 +349,7 @@ walmart_pdp_recommender/
 │   ├── default.yaml          # Portfolio-scale defaults
 │   └── smoke.yaml            # CI / quick local run
 ├── scripts/run_pipeline.py
-├── src/walmart_rec/
+├── src/ecommerce_rec/
 │   ├── cli.py
 │   ├── config.py
 │   ├── data/generate.py
@@ -362,14 +362,14 @@ walmart_pdp_recommender/
 
 ---
 
-## 12. Relationship to published Walmart work
+## 12. Relationship to published industry work
 
-This implementation is an **architecture-faithful open simulation**, guided by public Walmart research — not a claim of access to internal systems:
+This implementation is an **architecture-faithful open simulation** of production PDP recommenders at large e-commerce retailers — guided by public research, not a claim of access to any internal systems:
 
 | Public work | What we mirror |
 |-------------|----------------|
-| [SPIR (WalmartLabs, 2020)](https://irsworkshop.github.io/2020/publications/paper_13_%20Sinha_SPIR.pdf) | Recall set + ML re-ranker; brand/price Customer Understanding |
-| [EBR at Walmart (2024)](https://arxiv.org/pdf/2408.04884) | Dual-encoder retrieval, engagement-weighted labels, ANN serving |
+| [SPIR (Sinha et al., 2020)](https://irsworkshop.github.io/2020/publications/paper_13_%20Sinha_SPIR.pdf) | Recall set + ML re-ranker; brand/price Customer Understanding |
+| [Embedding-based retrieval / EBR (Lin et al., 2024)](https://arxiv.org/pdf/2408.04884) | Dual-encoder retrieval, engagement-weighted labels, ANN serving |
 | [GNN-GMVO Similar Items (2023)](https://arxiv.org/abs/2310.17732) | PDP similar-item surface; NDCG@8 reporting convention |
 
 ---
@@ -378,4 +378,4 @@ This implementation is an **architecture-faithful open simulation**, guided by p
 
 MIT — see [LICENSE](LICENSE).
 
-Synthetic data is for education and portfolio demonstration only. Do not present metrics from this dataset as Walmart production results.
+Synthetic data is for education and portfolio demonstration only. Do not present metrics from this dataset as production results from any retailer.

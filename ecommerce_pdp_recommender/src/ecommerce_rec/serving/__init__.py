@@ -11,12 +11,12 @@ import numpy as np
 import pandas as pd
 import torch
 
-from walmart_rec.config import ProjectConfig, load_config
-from walmart_rec.data.generate import load_catalog
-from walmart_rec.ranking.features import assemble_pair_features
-from walmart_rec.ranking.train import _encode_context_batch, _train_histories
-from walmart_rec.retrieval.faiss_index import ann_search, load_faiss_index
-from walmart_rec.retrieval.train import load_two_tower
+from ecommerce_rec.config import ProjectConfig, load_config
+from ecommerce_rec.data.generate import load_catalog
+from ecommerce_rec.ranking.features import assemble_pair_features
+from ecommerce_rec.ranking.train import _encode_context_batch, _train_histories
+from ecommerce_rec.retrieval.faiss_index import ann_search, load_faiss_index
+from ecommerce_rec.retrieval.train import load_two_tower
 
 
 @dataclass

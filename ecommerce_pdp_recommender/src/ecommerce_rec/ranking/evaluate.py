@@ -13,18 +13,18 @@ import torch
 from sklearn.metrics import ndcg_score
 from tqdm import tqdm
 
-from walmart_rec.config import ProjectConfig
-from walmart_rec.data import EVENT_ATC, EVENT_CLICK, EVENT_PURCHASE
-from walmart_rec.data.generate import load_catalog, temporal_split
-from walmart_rec.ranking.features import assemble_pair_features
-from walmart_rec.ranking.train import (
+from ecommerce_rec.config import ProjectConfig
+from ecommerce_rec.data import EVENT_ATC, EVENT_CLICK, EVENT_PURCHASE
+from ecommerce_rec.data.generate import load_catalog, temporal_split
+from ecommerce_rec.ranking.features import assemble_pair_features
+from ecommerce_rec.ranking.train import (
     POSITIVE_EVENTS,
     _encode_context_batch,
     _queries_from_events,
     _train_histories,
 )
-from walmart_rec.retrieval.faiss_index import ann_search, load_faiss_index
-from walmart_rec.retrieval.train import load_two_tower
+from ecommerce_rec.retrieval.faiss_index import ann_search, load_faiss_index
+from ecommerce_rec.retrieval.train import load_two_tower
 
 
 def _ndcg_at(y_true: np.ndarray, y_score: np.ndarray, k: int) -> float:
@@ -92,7 +92,7 @@ def evaluate(cfg: ProjectConfig) -> dict:
             retrieved = set(cands)
             recall = len(positives & retrieved) / max(len(positives), 1)
             metrics["recall_at_k"].append(float(recall))
-            # Include missing positives so NDCG is well-defined (Walmart offline eval style)
+            # Include missing positives so NDCG is well-defined (industry offline eval style)
             for p in positives:
                 if p not in cands:
                     cands.append(p)

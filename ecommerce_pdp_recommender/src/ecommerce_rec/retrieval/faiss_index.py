@@ -10,10 +10,10 @@ import numpy as np
 import pandas as pd
 import torch
 
-from walmart_rec.config import ProjectConfig
-from walmart_rec.data.generate import load_catalog
-from walmart_rec.retrieval.model import item_numeric_features
-from walmart_rec.retrieval.train import load_two_tower
+from ecommerce_rec.config import ProjectConfig
+from ecommerce_rec.data.generate import load_catalog
+from ecommerce_rec.retrieval.model import item_numeric_features
+from ecommerce_rec.retrieval.train import load_two_tower
 
 
 @torch.no_grad()

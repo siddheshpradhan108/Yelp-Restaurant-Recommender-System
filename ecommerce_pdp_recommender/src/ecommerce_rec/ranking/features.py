@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-from walmart_rec.data import EVENT_ATC, EVENT_CLICK, EVENT_PURCHASE
+from ecommerce_rec.data import EVENT_ATC, EVENT_CLICK, EVENT_PURCHASE
 
 
 POSITIVE_EVENTS = {EVENT_CLICK, EVENT_ATC, EVENT_PURCHASE}

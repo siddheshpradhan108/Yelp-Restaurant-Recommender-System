@@ -1,4 +1,4 @@
-# Walmart-style PDP two-stage recommender — default config
+# E-commerce PDP two-stage recommender — default config
 # Scale down for CI smoke tests; scale up for portfolio runs.
 
 paths:
@@ -14,7 +14,7 @@ data:
   # Temporal holdout fraction (last portion of timeline = test)
   test_fraction: 0.15
   min_events_per_user: 5
-  # Implicit engagement weights (Walmart EBR-style funnel)
+  # Implicit engagement weights (engagement-weighted funnel (EBR-style))
   weight_impression: 0.001
   weight_click: 0.01
   weight_atc: 0.1

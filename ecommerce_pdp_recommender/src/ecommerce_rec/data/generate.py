@@ -1,7 +1,7 @@
-"""Synthetic Walmart.com-like catalog and PDP engagement logs.
+"""Synthetic large-retailer catalog and PDP engagement logs.
 
 Why synthetic?
-  Walmart does not release production behavioral logs. This generator produces a
+  Production behavioral logs are proprietary. This generator produces a
   structurally faithful proxy: category/brand catalog, funnel events, session-
   anchored PDP views, and co-purchase graphs — enough to train Two-Tower + LGBM
   end-to-end and demo production architecture choices.
@@ -14,8 +14,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from walmart_rec.config import DataConfig, ProjectConfig
-from walmart_rec.data import (
+from ecommerce_rec.config import DataConfig, ProjectConfig
+from ecommerce_rec.data import (
     EVENT_ATC,
     EVENT_CLICK,
     EVENT_IMPRESSION,

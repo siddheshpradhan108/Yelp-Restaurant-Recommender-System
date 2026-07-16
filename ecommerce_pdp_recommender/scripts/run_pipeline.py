@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from walmart_rec.cli import main  # noqa: E402
+from ecommerce_rec.cli import main  # noqa: E402
 
 if __name__ == "__main__":
     main()

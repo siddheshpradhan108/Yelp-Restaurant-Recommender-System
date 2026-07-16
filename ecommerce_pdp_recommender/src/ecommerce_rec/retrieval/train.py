@@ -11,10 +11,10 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
-from walmart_rec.config import ProjectConfig
-from walmart_rec.data import EVENT_ATC, EVENT_CLICK, EVENT_PURCHASE
-from walmart_rec.data.generate import build_pairs, load_catalog, temporal_split
-from walmart_rec.retrieval.model import TwoTowerModel, item_numeric_features
+from ecommerce_rec.config import ProjectConfig
+from ecommerce_rec.data import EVENT_ATC, EVENT_CLICK, EVENT_PURCHASE
+from ecommerce_rec.data.generate import build_pairs, load_catalog, temporal_split
+from ecommerce_rec.retrieval.model import TwoTowerModel, item_numeric_features
 
 
 POSITIVE_EVENTS = {EVENT_CLICK, EVENT_ATC, EVENT_PURCHASE}
